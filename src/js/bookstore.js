@@ -1,4 +1,4 @@
-var BookStoreApp = new Backbone.Marionette.Application();
+BookStoreApp = new Backbone.Marionette.Application();
 BookStoreApp.addRegions({
   mainRegion: '#main',
 });
@@ -112,3 +112,84 @@ bookView.logMessage('hi');
 bookView.alertMessage('bye');
 
 var regionManager = new Marionette.RegionManager();
+
+Books = (function(Backbone, Marionette) {
+  'use strict';
+  var App = new Marionette.Application();
+  
+  App.on('initialize:after', function(){
+    if (Backbone.history) {
+      Backbone.history.start();
+    }
+  });
+
+  App.startSubApp = function(appName, args){
+    var currentApp = App.module(appName);
+    if (App.currentApp === currentApp) { return; }
+
+    if (App.currentApp) {
+      App.currentApp.stop();
+    }
+
+    App.currentApp = currentApp;
+    currentApp.start(args);
+  };
+  return App;
+})(Backbone, Backbone.Marionette);
+
+Books.module('CartApp', {
+  startWithParent: false,
+  define: function(CartApp, App, Backbone, Marionette, $, _){
+    'use strict';
+    var Router = Backbone.Router.extend({
+      routes: {
+        "(:category)(/:id)": "init"
+      },
+      before: function() {
+        App.startSubApp('CartApp');
+      },
+      init: function(category, id) {
+        // call cart app controller
+      }
+    });
+    App.addInitializer(function(){
+      var router = new Router();
+    });
+  }
+});
+
+Books.module('HistoryApp', {
+  startWithParent: false,
+  define: function(HistoryApp, App, Backbone, Marionette, $, _) {
+    var Router = Backbone.Router.extend({
+      routes: {
+        'history/orders': 'showHistory',
+      },
+      before: function(){
+        App.startSubApp('HistoryApp');
+      },
+      showHistory: function(){
+        // call history app controller
+      }
+    });
+    App.addInitializer(function(){
+      var router = new Router();
+    });
+  }
+});
+
+Books.module('HistoryApp', function(HistoryApp, App) {
+  'use strict';
+
+  HistoryApp.Controller = Marionette.Controller.extend({
+  });
+  HistoryApp.addInitializer(function(args) { 
+    HistoryApp.controller = new HistoryApp.Controller();
+  });
+  HistoryApp.addFinalizer(function(){
+    if (HistoryApp.controller) { 
+      HistoryApp.controller.close();
+      delete HistoryApp.controller;
+    }
+  });
+});
