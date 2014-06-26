@@ -1,4 +1,13 @@
 var BookStoreApp = new Backbone.Marionette.Application();
+BookStoreApp.addRegions({
+  mainRegion: '#main',
+});
+BookStoreApp.mainRegion.on('show', function(view) {
+  console.log('loaded main region.');
+});
+BookStoreApp.mainRegion.on('close', function(view) {
+  console.log('closing main region.');
+});
 
 var BookStoreController = Backbone.Marionette.Controller.extend({
   displayBooks: function() {
@@ -79,7 +88,9 @@ var CatalogLayout = Backbone.Marionette.LayoutView.extend({
 });
 
 var catalogLayout = new CatalogLayout();
-catalogLayout.render();
+BookStoreApp.mainRegion.show(catalogLayout)
+catalogLayout.categories.show(new CategoriesView());
+//catalogLayout.products.show(new ProductsView());
 
 var HandyView = Backbone.Marionette.ItemView.extend({
   initialize: function(){
@@ -99,3 +110,5 @@ var BookView = HandyView.extend({
 var bookView = new BookView();
 bookView.logMessage('hi');
 bookView.alertMessage('bye');
+
+var regionManager = new Marionette.RegionManager();
