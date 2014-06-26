@@ -22,8 +22,7 @@
       </div>
     </div>
     <div id="main" class="container-fluid">
-      <div id="application">
-      </div> 
+      <div id="application"></div>
     </div>
     <footer>
     <hr>  
@@ -48,11 +47,19 @@
         </div>
       </div>
     </script>
-    <script type="text/javascript" src="../lib/jquery.js"></script>
-    <script type="text/javascript" src="../lib/underscore.js"></script>
-    <script type="text/javascript" src="../lib/backbone.js"></script>
-    <script type="text/javascript" src="../lib/backbone.marionette.js"></script>
-    <script type="text/javascript" src="../lib/bootstrap/js/bootstrap.min.js"></script>
-    <script src="js/bookstore.js"></script>
+    <script id="books-template" type="text/html">
+      BLAH
+      <ul>
+        <% _.each(items, function(item){ %>
+        <li><a href="book/<%= item.id %>"><%= item.name %></a></li>
+        <% }); %>
+      </ul>
+    </script>
+    <script type="text/javascript" src="/lib/jquery.js"></script>
+    <script type="text/javascript" src="/lib/underscore.js"></script>
+    <script type="text/javascript" src="/lib/backbone.js"></script>
+    <script type="text/javascript" src="/lib/backbone.marionette.js"></script>
+    <script type="text/javascript" src="/lib/bootstrap/js/bootstrap.min.js"></script>
+    <script src="src/js/bookstore.js"></script>
   </body>
 </html>
